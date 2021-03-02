@@ -6,6 +6,7 @@ RUN apk update && \
     rm -rf /var/cache/apk/*
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.py /entrypoint.py
+COPY mark_read.py /mark_read.py
 
 WORKDIR /data
 
