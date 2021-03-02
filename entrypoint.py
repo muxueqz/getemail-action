@@ -13,7 +13,6 @@ import base64
 imap_host = os.getenv("INPUT_EMAIL_SERVER")
 imap_user = os.getenv("INPUT_EMAIL_USER")
 imap_pass = os.getenv("INPUT_EMAIL_PASSWORD")
-message_id = os.getenv("INPUT_MESSAGE_ID")
 output_file = os.getenv("INPUT_OUTPUT_FILE")
 try:
     os.makedirs(output_file)
