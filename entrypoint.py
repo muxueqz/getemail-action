@@ -15,6 +15,9 @@ imap_user = os.getenv("INPUT_EMAIL_USER")
 imap_pass = os.getenv("INPUT_EMAIL_PASSWORD")
 message_id = os.getenv("INPUT_MESSAGE_ID")
 output_file = os.getenv("INPUT_OUTPUT_FILE")
+try:
+    os.makedirs(output_file)
+except FileExistsError:pass
 
 def image_to_data_url(filename, img):
     ext = filename.split('.')[-1]
@@ -212,7 +215,7 @@ class Message:
         with open(output_file, 'wb') as fp:
             fp.write(bytearray(output, 'utf-8'))
 
-def saveEmail(data, output_file):
+def saveEmail(data, output):
     for response_part in data:
         if isinstance(response_part, tuple):
             msg = ""
@@ -230,7 +233,12 @@ def saveEmail(data, output_file):
 
             message = Message(msg)
             #  message.createMetaFile()
-            message.write_html(output_file)
+            message.write_html(os.path.join(output, message.getSubject() + '.html'))
+            return {
+                'message_id': message.msg['Message-Id'],
+                'file_name': os.path.join(
+                    output, message.getSubject() + '.html'),
+            }
 
 
     return True
@@ -240,13 +248,19 @@ imap = imaplib.IMAP4_SSL(imap_host)
 ## login to server
 imap.login(imap_user, imap_pass)
 
-imap.select('Inbox')
+imap.select('Inbox', readonly=True)
 
 #  tmp, data = imap.search(None, 'ALL')
-tmp, data = imap.search(None, '(HEADER Message-ID "%s")' % message_id)
+#  tmp, data = imap.search(None, '(HEADER Message-ID "%s")' % message_id)
+tmp, data = imap.search(None, 'Unseen')
+print(tmp,data)
+mails = {}
 for num in data[0].split():
-#        tmp, data = imap.fetch(num, '(BODY[HEADER.FIELDS (MESSAGE-ID)])')
-
-        tmp, data = imap.fetch(num, '(RFC822)')
-        saveEmail(data, output_file)
+    tmp, data = imap.fetch(num, '(RFC822)')
+    #  print(tmp, data)
+    r = saveEmail(data, output_file)
+    mails[r['message_id']] = r['file_name']
 imap.close()
+
+with open(output_file + '/dump.json', 'w') as _fd:
+    json.dump(mails, _fd)
