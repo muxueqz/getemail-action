@@ -43,6 +43,8 @@ class Message:
                 headers[i]=text
                 if charset:
                     headers[i]=str(text, charset)
+                elif isinstance(text, bytes):
+                    headers[i]=text.decode('utf8')
                 else:
                     headers[i]=str(text)
             return u"".join(headers)
