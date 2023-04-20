@@ -7,6 +7,7 @@ import imaplib
 import json
 import re
 import os
+import mimetypes
 
 import base64
 
