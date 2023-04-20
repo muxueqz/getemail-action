@@ -6,7 +6,7 @@ from email.header import decode_header
 import imaplib
 import json
 import re
-import os
+import os, sys
 import mimetypes
 
 import base64
