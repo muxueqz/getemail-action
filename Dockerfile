@@ -2,7 +2,7 @@
 FROM alpine:latest
 
 RUN apk update && \
-    apk add python3 && \
+    apk add python3 py3-chardet && \
     rm -rf /var/cache/apk/*
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.py /entrypoint.py
