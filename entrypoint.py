@@ -7,8 +7,8 @@ import imaplib
 import json
 import re
 import os, sys
+import chardet
 import mimetypes
-
 import base64
 
 imap_host = os.getenv("INPUT_EMAIL_SERVER")
