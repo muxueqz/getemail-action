@@ -254,7 +254,8 @@ imap.select('Inbox', readonly=True)
 
 #  tmp, data = imap.search(None, 'ALL')
 #  tmp, data = imap.search(None, '(HEADER Message-ID "%s")' % message_id)
-tmp, data = imap.search(None, 'Unseen')
+search_criteria = '(Unseen HEADER To %s)' % imap_user
+tmp, data = imap.search(None, search_criteria)
 print(tmp,data)
 mails = {}
 for num in data[0].split():
